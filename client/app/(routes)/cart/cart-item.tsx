@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import { Products } from "@/type-db";
 import { Trash } from "lucide-react";
 import Image from "next/image";
-import { it } from "node:test";
 import { useState } from "react";
 
 interface CartItemProps {
@@ -15,12 +14,23 @@ interface CartItemProps {
 }
 
 const CartItem = ({ item }: CartItemProps) => {
-    const [qty, setQty] = useState(item.qty ?? 1);
-    const cart = useCart();
-    const handleQty = (num:number)=>{
-      setQty(num);
-      cart.updateQty(item.id, num);
+  const [qty, setQty] = useState(item.qty ?? 1);
+  const cart = useCart();
+
+  const handleIncrement = () => {
+    const newQty = qty + 1;
+    setQty(newQty);
+    cart.updateQty(item.id, newQty);
+  };
+
+  const handleDecrement = () => {
+    if (qty > 1) {
+      const newQty = qty - 1;
+      setQty(newQty);
+      cart.updateQty(item.id, newQty);
     }
+  };
+
   return (
     <Box className="flex items-center justify-between gap-4 border border-gray-200 p-3 rounded-2xl">
       <div className="aspect-square w-24 min-w-24 h-24 min-h-24 rounded-md bg-gray-100 flex items-center justify-center relative overflow-hidden">
@@ -54,31 +64,33 @@ const CartItem = ({ item }: CartItemProps) => {
         </div>
       </div>
       <Box className="flex items-center justify-center h-full">
-        <div className="flex items-center gap-3">
-          {[1, 2, 3, 4, 5].map((num) => (
-            <div
-              onClick={() => handleQty(num)}
-              key={num}
-              className={cn(
-                "w-8 h-8 cursor-pointer rounded-full flex items-center justify-center border-2 border-green-500",
-                qty === num
-                  ? "bg-green-500 shadow-md text-white"
-                  : "bg-transparent shadow-none"
-              )}
-            >
-              {num}
-            </div>
-          ))}
+        <div className="flex items-center gap-2">
+          <Button
+            size="icon"
+            variant="outline"
+            onClick={handleDecrement}
+            disabled={qty <= 1}
+          >
+            -
+          </Button>
+          <span className="px-4 font-bold">{qty}</span>
+          <Button
+            size="icon"
+            variant="outline"
+            onClick={handleIncrement}
+          >
+            +
+          </Button>
         </div>
       </Box>
       <Box className="flex items-center justify-center h-full">
         <h2 className="font-bold text-muted-foreground">
-          $ {item.discountPrice * item.qty}
+          $ {(item.discountPrice * qty).toFixed(2)}
         </h2>
       </Box>
       <Button
-        size={"icon"}
-        variant={"ghost"}
+        size="icon"
+        variant="ghost"
         onClick={() => cart.removeItem(item.id)}
         className="text-muted-foreground hover:text-red-500 p-2"
       >
@@ -87,5 +99,5 @@ const CartItem = ({ item }: CartItemProps) => {
     </Box>
   );
 };
- 
+
 export default CartItem;

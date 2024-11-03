@@ -11,17 +11,19 @@ const OrderPage = async ({ params }: { params: { storeId: string } }) => {
     await getDocs(collection(doc(db, "stores", params.storeId), "orders"))
   ).docs.map((doc) => doc.data()) as Order[];
 
-  const formattedOrder: OrderColumns[] = orderData.map((item) => ({
+  // Filter out orders that have an address
+  const filteredOrderData = orderData.filter((item) => item.address);
+
+  const formattedOrder: OrderColumns[] = filteredOrderData.map((item) => ({
     id: item.id,
     phone: item.phone,
     address: item.address,
     isPaid: item.isPaid,
     images: item.orderItems.map((item) => item.images[0].url),
     products: item.orderItems.map((item) => item.id).join(","),
-    // Tạo một mảng để chứa tên sản phẩm và số lượng tương ứng
     productQuantities: item.orderItems.map((item) => ({
-      productId: item.id, // Nếu bạn có trường `name` trong mỗi sản phẩm
-      qty: item.qty,   // Số lượng của sản phẩm
+      productId: item.id,
+      qty: item.qty,
     })),
     order_status: item.order_status,
     totalPrice: formatter.format(

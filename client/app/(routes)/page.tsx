@@ -1,3 +1,4 @@
+// HomePage.tsx
 "use client";
 import { useEffect, useState } from "react";
 import getProducts from "@/actions/get-products"; // Assuming you have this function elsewhere
@@ -17,6 +18,7 @@ import Link from "next/link";
 const HomePage = () => {
   const [products, setProducts] = useState<Products[]>([]);
   const [billboards, setBillboards] = useState<Billboards[]>([]);
+  const [bestSellingProducts, setBestSellingProducts] = useState<Products[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 15;
 
@@ -29,7 +31,15 @@ const HomePage = () => {
         const productData = productSnapshot.docs.map((doc) =>
           doc.data()
         ) as Products[];
+
+        // Set featured products for display
         setProducts(productData.filter((pro) => pro.isFeatured === true));
+
+        // Sort products by 'sold_out' for the "Best Seller" section
+        const sortedProducts = [...productData].sort(
+          (a, b) => b.sold_out - a.sold_out
+        );
+        setBestSellingProducts(sortedProducts.slice(0, 10)); // Top 10 best-sellers
 
         const billboardSnapshot = await getDocs(
           collection(doc(db, "stores", "GsGFvwku3vPwlUyXKUnn"), "billboards")
@@ -70,55 +80,12 @@ const HomePage = () => {
 
   return (
     <Container className="px-4 lg:px-12">
-      <section className="grid grid-cols-1 md:grid-cols-2 py-2 pt-16">
-        <div className="flex flex-col items-start justify-start gap-4">
-          <p className="px-6 py-1 rounded-full border-2 border-gray-500">
-            Buy fresh
-          </p>
-          <h2 className="text-5xl font-bold tracking-wider uppercase text-neutral-700 my-4">
-            Just come <span className="block py-4">Grocery Store</span>
-          </h2>
-          <p className="text-base text-center md:text-left text-neutral-500 my-4">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-            Consequuntur quo quos incidunt dolor. Dicta ipsa saepe autem
-            temporibus optio aspernatur asperiores. Doloremque natus odit
-            quidem! Dolores, porro quibusdam. Ipsum, sunt?
-          </p>
-          <div className="my-4 flex items-center justify-center gap-6 w-full md:w-auto">
-            <img
-              src="/nature-leaf-logo-design-inspiration_586862-351.png"
-              className="absolute -z-50 top-0 left-10 w-full md:w-[20%]"
-            />
-            <Link href={"/menu"}>
-              <Button className="px-8 md:px-15 py-4 md:py-6 rounded-full bg-green-500">
-                Order now
-              </Button>
-            </Link>
-            <Link href={"/menu"}>
-              <Button
-                variant={"outline"}
-                className="px-8 md:px-15 py-4 md:py-6 rounded-full"
-              >
-                Explore now
-              </Button>
-            </Link>
-          </div>
-        </div>
-        <div>
-          <div className="w-full relative h-[560px] flex items-center justify-center">
-            <Image
-              src={"/vet.png"}
-              alt=""
-              className="object-contain w-full h-full absolute"
-              fill
-            />
-          </div>
-        </div>
-      </section>
+      {/* Slide Banner */}
       <section className="mt-24 mb-8">
         <SlideBanner billboards={billboards} />
       </section>
-      {/*All products */}
+
+      {/* All Products Section */}
       <h2 className="font-bold text-3xl capitalize">All products</h2>
       <Separator className="mt-2" />
       <section className="grid grid-cols-2 md:grid-cols-5 gap-6 gap-y-10 md:gap-12 my-4 py-8 mt-16">
@@ -139,98 +106,45 @@ const HomePage = () => {
           Next
         </Button>
       </div>
-      {/* Why choose us */}
+
+      {/* Best Seller Section */}
+      <section className="my-12">
+        <h2 className="text-4xl font-bold mb-4">Best Sellers</h2>
+        <Separator className="mb-4" />
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-6 gap-y-10 md:gap-12">
+          {bestSellingProducts.map((item) => (
+            <Popularcontent key={item.id} data={item} />
+          ))}
+        </div>
+      </section>
+
+      {/* Why Choose Us Section */}
       <section className="my-4 py-12 flex flex-col items-center justify-center">
         <h2 className="text-5xl md:text-5xl font-bold tracking-wider uppercase text-neutral-700 my-4">
           Why choose us?
         </h2>
-        <p className="w-full text-center md:w-[560px] text-base text-neutral-500 my-2">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Hic, commodi
-          repellendus quod tempore reiciendis mollitia perferendis{" "}
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full my-6 mt-20">
-          <Card className="shadow-lg rounded-md border-none p-4 py-12 flex flex-col items-center justify-center gap-4">
-            <Salad className="w-8 h-8 text-hero" />
-            <CardTitle className="text-neutral-600">
-              Serve Healthy Food
-            </CardTitle>
-            <CardDescription className="text-center">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus
-              laudantium sunt
+        <Separator className="my-4" />
+        <div className="grid md:grid-cols-3 gap-8 mt-8 w-full px-2">
+          <Card className="h-full text-center py-8 px-2">
+            <FileHeart className="mx-auto text-primary w-12 h-12 mb-4" />
+            <CardTitle>Top Quality Products</CardTitle>
+            <CardDescription>
+              We offer a range of high-quality products that meet your needs and preferences.
             </CardDescription>
           </Card>
-          <Card className="shadow-lg rounded-md border-none p-4 py-12 flex flex-col items-center justify-center gap-4">
-            <FileHeart className="w-8 h-8 text-hero" />
-            <CardTitle className="text-neutral-600">Best Quality</CardTitle>
-            <CardDescription className="text-center">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus
-              laudantium sunt
+          <Card className="h-full text-center py-8 px-2">
+            <Salad className="mx-auto text-primary w-12 h-12 mb-4" />
+            <CardTitle>Freshness Guaranteed</CardTitle>
+            <CardDescription>
+              All products are fresh and sourced from reliable suppliers.
             </CardDescription>
           </Card>
-          <Card className="shadow-lg rounded-md border-none p-4 py-12 flex flex-col items-center justify-center gap-4">
-            <Truck className="w-8 h-8 text-hero" />
-            <CardTitle className="text-neutral-600">Fast Delivery</CardTitle>
-            <CardDescription className="text-center">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus
-              laudantium sunt
+          <Card className="h-full text-center py-8 px-2">
+            <Truck className="mx-auto text-primary w-12 h-12 mb-4" />
+            <CardTitle>Fast & Reliable Delivery</CardTitle>
+            <CardDescription>
+              Enjoy quick delivery services, ensuring your products arrive on time.
             </CardDescription>
-          </Card>
-        </div>
-      </section>
-      {/* Chef */}
-      <section className="my-4 py-12 flex flex-col items-center justify-center">
-        <h2 className="text-5xl md:text-5xl font-bold tracking-wider uppercase text-neutral-700 my-4">
-          Our Special Products
-        </h2>
-        <p className="w-full text-center md:w-[560px] text-base text-neutral-500 my-2">
-          Discover the best quality products from our store, carefully selected
-          just for you.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full my-6 mt-20">
-          {/* Product Card 1 */}
-          <Card className="shadow-lg relative rounded-2xl border-none flex flex-col items-center justify-end h-96 md:h-[520px] bg-white">
-            <Image
-              src="/fresh.png" // Replace with a grocery product image
-              alt="Fresh Vegetables"
-              className="w-full h-full object-cover rounded-2xl"
-              fill
-            />
-            <div className="absolute bottom-0 w-full p-4 bg-gradient-to-t from-gray-900 to-transparent text-white text-center">
-              <h3 className="text-xl font-semibold">Fresh Vegetables</h3>
-              <p className="text-sm">
-                Healthy and organic produce sourced locally.
-              </p>
-            </div>
-          </Card>
-
-          {/* Product Card 2 */}
-          <Card className="shadow-lg rounded-2xl relative border-none flex flex-col items-center justify-end h-96 md:h-[520px] mt-20 bg-white">
-            <Image
-              src="/fruits.png" // Replace with another grocery product image
-              alt=""
-              className="w-full h-full object-cover rounded-2xl"
-              fill
-            />
-            <div className="absolute bottom-0 w-full p-4 bg-gradient-to-t from-gray-900 to-transparent text-white text-center">
-              <h3 className="text-xl font-semibold">Artisan Bread</h3>
-              <p className="text-sm">Fresh fruit for you</p>
-            </div>
-          </Card>
-
-          {/* Product Card 3 */}
-          <Card className="shadow-lg relative rounded-2xl border-none flex flex-col items-center justify-end h-96 md:h-[520px] bg-white">
-            <Image
-              src="/dairy.jpg" // Replace with another grocery product image
-              alt="Dairy Products"
-              className="w-full h-full object-cover rounded-2xl"
-              fill
-            />
-            <div className="absolute bottom-0 w-full p-4 bg-gradient-to-t from-gray-900 to-transparent text-white text-center">
-              <h3 className="text-xl font-semibold">Dairy Products</h3>
-              <p className="text-sm">
-                High-quality dairy for a nutritious diet.
-              </p>
-            </div>
           </Card>
         </div>
       </section>

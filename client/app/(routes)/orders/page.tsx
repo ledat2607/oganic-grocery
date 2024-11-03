@@ -17,7 +17,9 @@ const OrderPage = async({ params }: { params: { storeId: string } }) => {
         collection(doc(db, "stores", "GsGFvwku3vPwlUyXKUnn"), "orders")
       )
     ).docs.map((doc) => doc.data()) as Order[];
-const formatedOrder = orderData.filter((item) => item?.userId === userId);
+const formatedOrder = orderData.filter(
+  (item) => item?.userId === userId && item.isPaid
+);
   return (
     <>
       <Container className="bg-white rounded-lg my-4 min-h-screen">
