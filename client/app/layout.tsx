@@ -34,7 +34,7 @@ export default function RootLayout({
           />
           <Header userId={userId} />
           {children}
-          {userId && <Footer />}
+          {<Footer />}
         </body>
       </html>
     </ClerkProvider>

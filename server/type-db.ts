@@ -6,6 +6,7 @@ export interface Store {
   userId: string;
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
+  withdraw: number;
 }
 
 export interface Billboards {

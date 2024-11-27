@@ -111,7 +111,7 @@ const HomePage = () => {
       <section className="my-12">
         <h2 className="text-4xl font-bold mb-4">Best Sellers</h2>
         <Separator className="mb-4" />
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-6 gap-y-10 md:gap-12">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-6 gap-y-10 md:gap-12 pt-20">
           {bestSellingProducts.map((item) => (
             <Popularcontent key={item.id} data={item} />
           ))}
@@ -129,7 +129,8 @@ const HomePage = () => {
             <FileHeart className="mx-auto text-primary w-12 h-12 mb-4" />
             <CardTitle>Top Quality Products</CardTitle>
             <CardDescription>
-              We offer a range of high-quality products that meet your needs and preferences.
+              We offer a range of high-quality products that meet your needs and
+              preferences.
             </CardDescription>
           </Card>
           <Card className="h-full text-center py-8 px-2">
@@ -143,8 +144,63 @@ const HomePage = () => {
             <Truck className="mx-auto text-primary w-12 h-12 mb-4" />
             <CardTitle>Fast & Reliable Delivery</CardTitle>
             <CardDescription>
-              Enjoy quick delivery services, ensuring your products arrive on time.
+              Enjoy quick delivery services, ensuring your products arrive on
+              time.
             </CardDescription>
+          </Card>
+        </div>
+      </section>
+      <section className="my-4 py-12 flex flex-col items-center justify-center">
+        <h2 className="text-5xl md:text-5xl font-bold tracking-wider uppercase text-neutral-700 my-4">
+          Our Special Products
+        </h2>
+        <p className="w-full text-center md:w-[560px] text-base text-neutral-500 my-2">
+          Discover the best quality products from our store, carefully selected
+          just for you.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full my-6 mt-20">
+          {/* Product Card 1 */}
+          <Card className="shadow-lg relative rounded-2xl border-none flex flex-col items-center justify-end h-96 md:h-[520px] bg-white">
+            <Image
+              src="/fruits.png" // Replace with a grocery product image
+              alt="Fresh Vegetables"
+              className="w-full h-full object-cover rounded-2xl"
+              fill
+            />
+            <div className="absolute bottom-0 w-full p-4 bg-gradient-to-t from-gray-900 to-transparent text-white text-center">
+              <h3 className="text-xl font-semibold">Amazing Organic fruits</h3>
+              <p className="text-sm">
+                Healthy and delicous produce sourced locally.
+              </p>
+            </div>
+          </Card>
+
+          {/* Product Card 2 */}
+          <Card className="shadow-lg rounded-2xl relative border-none flex flex-col items-center justify-end h-96 md:h-[520px] mt-20 bg-white">
+            <Image
+              src="/fruit.png" // Replace with another grocery product image
+              alt=""
+              className="w-full h-full object-cover rounded-2xl"
+              fill
+            />
+            <div className="absolute bottom-0 w-full p-4 bg-gradient-to-t from-gray-900 to-transparent text-white text-center">
+              <h3 className="text-xl font-semibold">Fruits</h3>
+              <p className="text-sm">Delicous food for you</p>
+            </div>
+          </Card>
+
+          {/* Product Card 3 */}
+          <Card className="shadow-lg relative rounded-2xl border-none flex flex-col items-center justify-end h-96 md:h-[520px] bg-white">
+            <Image
+              src="/fresh.png" // Replace with another grocery product image
+              alt=""
+              className="w-full h-full object-cover rounded-2xl"
+              fill
+            />
+            <div className="absolute bottom-0 w-full p-4 bg-gradient-to-t from-gray-900 to-transparent text-white text-center">
+              <h3 className="text-xl font-semibold">Vegetable</h3>
+              <p className="text-sm">High-quality dairy for a nutritious.</p>
+            </div>
           </Card>
         </div>
       </section>
