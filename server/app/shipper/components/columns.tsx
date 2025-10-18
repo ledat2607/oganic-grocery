@@ -5,7 +5,13 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { Product } from "@/type-db";
 import { useState } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import CellImage from "@/app/(dashboard)/[storeId]/(routes)/billboards/components/cell-image";
@@ -81,7 +87,7 @@ export const columns: ColumnDef<ShippingColumns>[] = [
       const handleUpdateStatus = async () => {
         try {
           const response = await fetch(
-            `/api/stores/GsGFvwku3vPwlUyXKUnn/orders/${row.original.id}`,
+            `/api/stores/VFiQXRkIfcT3ZdhUuhQB/orders/${row.original.id}`,
             {
               method: "PATCH",
               headers: {
@@ -122,7 +128,7 @@ export const columns: ColumnDef<ShippingColumns>[] = [
           </Button>
           <Modal
             title="Update Order Status"
-            description="Select a new status for the order"
+            desription="Select a new status for the order"
             isOpen={isOpen}
             onClose={() => setIsOpen(false)}
           >
@@ -170,7 +176,9 @@ export const columns: ColumnDef<ShippingColumns>[] = [
 // Main component
 const YourComponent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState<ShippingColumns | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<ShippingColumns | null>(
+    null
+  );
 
   // Function to handle row click
   const handleRowClick = (order: ShippingColumns) => {
@@ -185,17 +193,29 @@ const YourComponent = () => {
       {/* <Table columns={columns} data={yourData} /> */}
 
       <Modal
+        title=""
+        desription=""
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       >
         {selectedOrder && (
           <div>
             <h2 className="text-2xl font-bold mb-4">Order Details</h2>
-            <p><strong>Order ID:</strong> {selectedOrder.id}</p>
-            <p><strong>User Phone:</strong> {selectedOrder.phone}</p>
-            <p><strong>Address:</strong> {selectedOrder.address}</p>
-            <p><strong>Status:</strong> {selectedOrder.order_status}</p>
-            <p><strong>Total Price:</strong> {selectedOrder.totalPrice}</p>
+            <p>
+              <strong>Order ID:</strong> {selectedOrder.id}
+            </p>
+            <p>
+              <strong>User Phone:</strong> {selectedOrder.phone}
+            </p>
+            <p>
+              <strong>Address:</strong> {selectedOrder.address}
+            </p>
+            <p>
+              <strong>Status:</strong> {selectedOrder.order_status}
+            </p>
+            <p>
+              <strong>Total Price:</strong> {selectedOrder.totalPrice}
+            </p>
             <h3 className="font-semibold mt-4">Products:</h3>
             <ul>
               {selectedOrder.productQuantities.map((item) => (
@@ -204,7 +224,9 @@ const YourComponent = () => {
                 </li>
               ))}
             </ul>
-            <p><strong>Created At:</strong> {selectedOrder.createdAt}</p>
+            <p>
+              <strong>Created At:</strong> {selectedOrder.createdAt}
+            </p>
           </div>
         )}
       </Modal>

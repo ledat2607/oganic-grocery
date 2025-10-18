@@ -30,6 +30,24 @@ import axios from "axios";
 interface DashboardOverviewProps {
   params: { storeId: string };
 }
+// 🪄 Hàm format tiền VND (fix lỗi "$1,000.00" → 0 ₫)
+const formatCurrency = (value: string | number) => {
+  if (!value) return "₫0";
+
+  // Nếu là chuỗi kiểu "$1,000.00", loại bỏ ký tự không cần thiết
+  const cleaned = String(value).replace(/[^0-9.,-]+/g, "");
+
+  // Chuyển dấu phẩy thành dấu chấm để parse chính xác
+  const numeric = parseFloat(cleaned.replace(/,/g, ""));
+
+  if (isNaN(numeric)) return "₫0";
+
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+    minimumFractionDigits: 0,
+  }).format(numeric);
+};
 
 const DashboardOverview = ({ params }: DashboardOverviewProps) => {
   const [totalRevenue, setTotalRevenue] = useState<number>(0);
@@ -76,28 +94,26 @@ const DashboardOverview = ({ params }: DashboardOverviewProps) => {
   const closeModal = () => setModalOpen(false);
   const [amount, setAmount] = useState("");
   const handleWithdraw = async (event: React.FormEvent) => {
-  event.preventDefault();
+    event.preventDefault();
 
-  try {
-    const response = await axios.patch(
-      `/api/stores/${params.storeId}/withDrawRoute`,
-      {
-        withdraw: parseFloat(amount), // Số tiền cần rút
-      }
-    );
-    console.log("Response:", response.data);
-    toast.success("Withdrawal successful");
-  } catch (error) {
-    console.error("Error:", error);
-    toast.error("Withdrawal failed");
-  }
-};
-
+    try {
+      const response = await axios.patch(
+        `/api/stores/${params.storeId}/withDrawRoute`,
+        {
+          withdraw: parseFloat(amount), // Số tiền cần rút
+        }
+      );
+      console.log("Response:", response.data);
+      toast.success("Withdrawal successful");
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Withdrawal failed");
+    }
+  };
 
   const [accountNumber, setAccountNumber] = useState("");
 
   const formatAccountNumber = (value: string) => {
-    // Xóa khoảng trắng cũ và thêm lại khoảng trắng sau mỗi 4 số
     return value.replace(/\s+/g, "").replace(/(\d{4})(?=\d)/g, "$1 ");
   };
 
@@ -122,10 +138,11 @@ const DashboardOverview = ({ params }: DashboardOverviewProps) => {
     }
     setAmount(value);
   };
+
   return (
     <div className="flex flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <Heading title="Dashboard" description="Overview your store" />
+        <Heading title="Quản lý" description="Tổng quan về cửa hàng của bạn" />
         <Separator />
         <div className="grid gap-4 grid-cols-4">
           {/* Total Revenue Card */}
@@ -138,7 +155,7 @@ const DashboardOverview = ({ params }: DashboardOverviewProps) => {
             </CardHeader>
             <CardContent className="flex items-center gap-4">
               <div className="text-2xl font-bold">
-                {formatter.format(totalRevenue)}
+                {formatCurrency(totalRevenue)}
               </div>
               <Button onClick={openModal}>Withdraw</Button>
             </CardContent>

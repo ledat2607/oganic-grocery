@@ -15,28 +15,28 @@ const MainNav = ({ className, scolled, ...props }: MainNavProps) => {
     const routes = [
       {
         href: "/",
-        label: "Home",
+        label: "Trang chủ",
         active: pathName === "/",
       },
       {
         href: "/menu",
         active: pathName === "/menu",
-        label: "Menu",
+        label: "Danh sách",
       },
       {
         href: "/orders",
         active: pathName === "/orders",
-        label: "Order",
+        label: "Đơn hàng",
       },
       {
         href: "/about",
         active: pathName === "/about",
-        label: "About",
+        label: "Giới thiệu",
       },
       {
         href: "/contacts",
         active: pathName === "/contacts",
-        label: "Contact",
+        label: "Liên hệ",
       },
     ];
   return (

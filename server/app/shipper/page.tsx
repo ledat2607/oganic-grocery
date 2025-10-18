@@ -7,12 +7,23 @@ import { ShippingClient } from "./components/shipping-client";
 import { db } from "@/lib/firebase";
 import { auth } from "@clerk/nextjs/server";
 import { ShippingColumns } from "./components/columns";
+import { UserRoles } from "@/const";
+import { redirect } from "next/navigation";
 
 const ShipperPage = async () => {
   const { userId } = await auth();
+
+  const isShipper = UserRoles.find(
+    (item) => item.id === userId && item.role === "shipper"
+  );
+
+  if (!isShipper) {
+    redirect("/sign-in");
+  }
+
   const orderData = (
     await getDocs(
-      collection(doc(db, "stores", "GsGFvwku3vPwlUyXKUnn"), "orders")
+      collection(doc(db, "stores", "VFiQXRkIfcT3ZdhUuhQB"), "orders")
     )
   ).docs.map((doc) => doc.data()) as Order[];
 

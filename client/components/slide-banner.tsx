@@ -22,7 +22,7 @@ const SlideBanner: React.FC<SlideBannerProps> = ({ billboards }) => {
   }, [billboards.length]);
 
   return (
-    <section className="relative w-full h-[400px] overflow-hidden rounded-2xl">
+    <section className="relative w-[80%] h-[400px] mx-auto overflow-hidden rounded-2xl">
       {billboards.length > 0 && (
         <div className="w-full h-full">
           {billboards.map((item, index) => (
@@ -35,8 +35,9 @@ const SlideBanner: React.FC<SlideBannerProps> = ({ billboards }) => {
               <Image
                 src={item.imageUrl}
                 alt={item.label}
-                className="object-cover w-full h-full"
-                fill
+                className="object-content w-full"
+                width={2000}
+                height={100}
               />
               <div className="absolute inset-0 flex items-center justify-center text-white text-3xl font-bold bg-black bg-opacity-40">
                 {item.label}

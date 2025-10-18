@@ -25,7 +25,7 @@ const MenuPage = async ({ searchParams }: MenuPageProps) => {
   try {
     const categories = (
       await getDocs(
-        collection(doc(db, "stores", "GsGFvwku3vPwlUyXKUnn"), "categories")
+        collection(doc(db, "stores", "VFiQXRkIfcT3ZdhUuhQB"), "categories")
       )
     ).docs.map((doc) => doc.data()) as Category[];
 
@@ -60,6 +60,5 @@ const MenuPage = async ({ searchParams }: MenuPageProps) => {
     return <div>Error loading data</div>;
   }
 };
-
 
 export default MenuPage;

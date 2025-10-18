@@ -24,12 +24,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
 import { Category, Cuisine, Product, Size } from "@/type-db";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
@@ -51,6 +52,7 @@ const formSchema = z.object({
   size: z.string().min(1),
   cuisine: z.string().min(1),
   category: z.string().min(1),
+  description: z.string(),
 });
 const ProductForm = ({
   initialData,
@@ -63,15 +65,16 @@ const ProductForm = ({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       name: "",
-      price: 1,
+      price: 1000,
       images: [],
       isFeatured: true,
       isArchived: false,
       qty: 1,
-      discountPrice: 1,
+      discountPrice: 1000,
       size: "",
       cuisine: "",
       category: "",
+      description: "",
     },
   });
 
@@ -79,6 +82,38 @@ const ProductForm = ({
   const params = useParams();
   const router = useRouter();
   const urlBack = `/${params.storeId}/products`;
+
+  const [formattedPrice, setFormattedPrice] = useState("");
+  const [formattedDiscount, setFormattedDiscount] = useState("");
+
+
+    // 🪄 Cập nhật format khi form thay đổi
+  useEffect(() => {
+    const formatCurrency = (value: number) =>
+      new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
+      }).format(value);
+
+    setFormattedPrice(formatCurrency(form.getValues("price") || 0));
+    setFormattedDiscount(formatCurrency(form.getValues("discountPrice") || 0));
+  }, [form]);
+
+  // 🧩 Hàm xử lý nhập tiền
+  const handleCurrencyChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    fieldName: "price" | "discountPrice"
+  ) => {
+    const rawValue = e.target.value.replace(/[^\d]/g, ""); // bỏ ký tự không phải số
+    const numericValue = parseInt(rawValue || "0", 10);
+    form.setValue(fieldName, numericValue);
+    const formatted = new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(numericValue);
+    if (fieldName === "price") setFormattedPrice(formatted);
+    else setFormattedDiscount(formatted);
+  };
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
@@ -194,16 +229,16 @@ const ProductForm = ({
             <FormField
               control={form.control}
               name="price"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <FormLabel>Product price</FormLabel>
                   <FormControl>
                     <Input
-                      type="number"
                       className="mt-6"
                       disabled={isLoading}
-                      placeholder="0"
-                      {...field}
+                      value={formattedPrice}
+                      onChange={(e) => handleCurrencyChange(e, "price")}
+                      placeholder="0 ₫"
                     />
                   </FormControl>
                   <FormMessage />
@@ -213,16 +248,16 @@ const ProductForm = ({
             <FormField
               control={form.control}
               name="discountPrice"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
-                  <FormLabel>Product discount price</FormLabel>
+                  <FormLabel>Discount price</FormLabel>
                   <FormControl>
                     <Input
-                      type="number"
                       className="mt-6"
                       disabled={isLoading}
-                      placeholder="0"
-                      {...field}
+                      value={formattedDiscount}
+                      onChange={(e) => handleCurrencyChange(e, "discountPrice")}
+                      placeholder="0 ₫"
                     />
                   </FormControl>
                   <FormMessage />
@@ -324,6 +359,23 @@ const ProductForm = ({
                     </SelectContent>
                   </Select>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="mt-4 w-[80%] mx-auto">
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <Textarea
+                    disabled={isLoading}
+                    onChange={field.onChange}
+                    value={field.value}
+                    defaultValue={field.value}
+                  />
                 </FormItem>
               )}
             />

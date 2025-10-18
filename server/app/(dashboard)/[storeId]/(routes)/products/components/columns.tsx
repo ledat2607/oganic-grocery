@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { ColumnDef } from "@tanstack/react-table"
+import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { CellAction } from "./cell-action";
@@ -22,6 +22,25 @@ export type ProductColumns = {
   category: string;
   createdAt: string;
 };
+// 🪄 Hàm format tiền VND (fix lỗi "$1,000.00" → 0 ₫)
+const formatCurrency = (value: string | number) => {
+  if (!value) return "₫0";
+
+  // Nếu là chuỗi kiểu "$1,000.00", loại bỏ ký tự không cần thiết
+  const cleaned = String(value).replace(/[^0-9.,-]+/g, "");
+
+  // Chuyển dấu phẩy thành dấu chấm để parse chính xác
+  const numeric = parseFloat(cleaned.replace(/,/g, ""));
+
+  if (isNaN(numeric)) return "₫0";
+
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+    minimumFractionDigits: 0,
+  }).format(numeric);
+};
+
 
 export const columns: ColumnDef<ProductColumns>[] = [
   {
@@ -49,6 +68,10 @@ export const columns: ColumnDef<ProductColumns>[] = [
         </Button>
       );
     },
+    cell: ({ row }) => {
+      const price = row.original.price;
+      return <span>{formatCurrency(price)}</span>;
+    },
   },
   {
     accessorKey: "discountPrice",
@@ -62,6 +85,10 @@ export const columns: ColumnDef<ProductColumns>[] = [
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
+    },
+    cell: ({ row }) => {
+      const discountPrice = row.original.discountPrice;
+      return <span>{formatCurrency(discountPrice)}</span>;
     },
   },
   {

@@ -12,6 +12,24 @@ import { useState } from "react";
 interface CartItemProps {
   item: Products;
 }
+// 🪄 Hàm format tiền VND (fix lỗi "$1,000.00" → 0 ₫)
+const formatCurrency = (value: string | number) => {
+  if (!value) return "₫0";
+
+  // Nếu là chuỗi kiểu "$1,000.00", loại bỏ ký tự không cần thiết
+  const cleaned = String(value).replace(/[^0-9.,-]+/g, "");
+
+  // Chuyển dấu phẩy thành dấu chấm để parse chính xác
+  const numeric = parseFloat(cleaned.replace(/,/g, ""));
+
+  if (isNaN(numeric)) return "₫0";
+
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+    minimumFractionDigits: 0,
+  }).format(numeric);
+};
 
 const CartItem = ({ item }: CartItemProps) => {
   const [qty, setQty] = useState(item.qty ?? 1);
@@ -74,18 +92,14 @@ const CartItem = ({ item }: CartItemProps) => {
             -
           </Button>
           <span className="px-4 font-bold">{qty}</span>
-          <Button
-            size="icon"
-            variant="outline"
-            onClick={handleIncrement}
-          >
+          <Button size="icon" variant="outline" onClick={handleIncrement}>
             +
           </Button>
         </div>
       </Box>
       <Box className="flex items-center justify-center h-full">
         <h2 className="font-bold text-muted-foreground">
-          $ {(item.discountPrice * qty).toFixed(2)}
+          {formatCurrency(item.discountPrice * qty)}
         </h2>
       </Box>
       <Button

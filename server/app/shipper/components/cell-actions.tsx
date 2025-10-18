@@ -14,7 +14,7 @@ import { Edit, Eye, MoreVertical } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { UserRoles } from "@/const"; 
+import { UserRoles } from "@/const";
 
 interface CellActionProps {
   data: ShippingColumns;
@@ -31,7 +31,7 @@ export const CellAction = ({ data }: CellActionProps) => {
       const shipperId = UserRoles[1]?.id; // Adjust index as needed
 
       // Update the order with the shipperId and additional data
-      await axios.patch(`/api/stores/GsGFvwku3vPwlUyXKUnn/shipper`, {
+      await axios.patch(`/api/stores/VFiQXRkIfcT3ZdhUuhQB/shipper`, {
         shipperId,
         orderId: data.id,
         ...data,

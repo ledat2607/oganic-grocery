@@ -14,7 +14,6 @@ import {
   where,
 } from "firebase/firestore";
 import { NextResponse } from "next/server";
-import { json } from "stream/consumers";
 
 export const POST = async (
   req: Request,
@@ -38,6 +37,7 @@ export const POST = async (
       isFeatured,
       isArchived,
       qty,
+      description,
     } = body;
     if (!name) {
       return new NextResponse("Size name is required", { status: 402 });
@@ -74,6 +74,7 @@ export const POST = async (
       isFeatured,
       isArchived,
       qty,
+      description,
       createdAt: serverTimestamp(),
       sold_out: 0,
     };

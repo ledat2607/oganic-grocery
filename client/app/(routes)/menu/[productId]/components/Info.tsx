@@ -26,10 +26,7 @@ const Info = ({ product }: InfoProps) => {
       <h1 className="text-3xl font-bold text-neutral-800">{product.name}</h1>
       <div className="mt-3 flex items-end justify-between">
         <p className="text-base text-left text-neutral-700">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, at!
-          Minima nisi architecto pariatur sunt, deserunt sed officia vero?
-          Aspernatur maxime nihil veniam recusandae obcaecati ducimus velit
-          voluptatum dolores tempore!
+          {product.description}
         </p>
       </div>
       <div className="w-full flex items-center justify-start gap-2 flex-wrap px-2 mt-8">
@@ -86,7 +83,9 @@ const Info = ({ product }: InfoProps) => {
           </div>
           <div className="flex items-center gap-4">
             <p>{product.qty}</p>
-            <p className="text-green-500 font-bold underline">Sold: {product.sold_out}</p>
+            <p className="text-green-500 font-bold underline">
+              Sold: {product.sold_out}
+            </p>
           </div>
         </div>
       </div>

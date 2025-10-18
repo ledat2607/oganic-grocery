@@ -51,6 +51,7 @@ export interface Products {
   isFeatured: boolean;
   isArchived: boolean;
   size: string;
+  description: string;
   cuisine: string;
   category: string;
   createdAt?: Timestamp;

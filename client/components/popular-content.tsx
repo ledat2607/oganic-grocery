@@ -48,8 +48,7 @@ const Popularcontent = ({ data }: PopularcontentProps) => {
         </p>
       </div>
       <CardDescription className="text-center px-2 py-2">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad natus
-        molestias nulla quas dolorum sunt assumenda totam quod cum inventore.
+        {data.description}
       </CardDescription>
       <div className="w-full flex items-center px-2 mt-4 gap-3">
         <Button

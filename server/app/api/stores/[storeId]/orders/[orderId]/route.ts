@@ -26,12 +26,12 @@ export const PATCH = async (
 
     const body = await req.json();
     const { order_status, product } = body;
-
+    
     // Chuyển đổi productQuantities thành mảng nếu không phải là mảng
     const quantities = Array.isArray(product.productQuantities)
       ? product.productQuantities
       : [product.productQuantities];
-
+    console.log(quantities);
     if (!order_status) {
       return new NextResponse("Order status is required", { status: 400 });
     }
@@ -45,10 +45,10 @@ export const PATCH = async (
       return new NextResponse("Store not found", { status: 404 });
     }
 
-    const storeData = store.data();
-    if (storeData?.userId !== userId) {
-      return new NextResponse("Unauthorized", { status: 403 });
-    }
+    // const storeData = store.data();
+    // if (storeData?.userId !== userId) {
+    //   return new NextResponse("Unauthorized", { status: 403 });
+    // }
 
     const orderRef = await getDoc(
       doc(db, "stores", params.storeId, "orders", params.orderId)

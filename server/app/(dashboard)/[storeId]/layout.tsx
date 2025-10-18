@@ -24,6 +24,9 @@ const DashboardLayout = async ({ children, params }: DashboardProps) => {
   if (userRole?.role === "shipper") {
     redirect("/shipper");
   }
+  if (userRole?.role !== "admin") {
+    redirect("http://localhost:3000/");
+  }
 
   const storeSnap = await getDocs(
     query(
