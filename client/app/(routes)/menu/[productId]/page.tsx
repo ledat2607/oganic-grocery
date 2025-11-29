@@ -17,31 +17,47 @@ interface ProductDetailProps {
 const ProductDetail = async ({ params }: ProductDetailProps) => {
   const product = await getProduct(params.productId);
   const suggestedProduct = await getProducts({ category: product.category });
-  return (
-    <div>
-      <Container className="bg-white rounded-lg my-4">
-        <Box className="text-neutral-700 text-sm items-center pl-12">
-          <Link href={"/"} className="flex items-center gap-2">
-            <Home className="w-6 h-6 cursor-pointer" />
-            Main page
-          </Link>
-          <ChevronRight className="w-5 h-5 text-muted-foreground" />
-          <Link href={"/menu"} className="flex items-center gap-2">
-            Product
-          </Link>
-        </Box>
 
-        <div className="px-4 py-10 sm:px-6 lg:px-8 space-y-10">
-          <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-y-8">
-            <Gallery image={product.images} />
-            <div className="mt-10 px-4 sm:mt-16 sm:px-8 lg:mt-0">
-              <Info product={product} />
-            </div>
-          </div>
-          <SuggestedList products={suggestedProduct} />
+  return (
+    <Container className="bg-white rounded-2xl shadow-sm my-6 p-6">
+
+      {/* Breadcrumb */}
+      <div className="flex items-center text-sm text-neutral-600 mb-6">
+        <Link href="/" className="flex items-center gap-2 hover:text-black transition">
+          <Home className="w-5 h-5" />
+          Main page
+        </Link>
+
+        <ChevronRight className="w-4 h-4 mx-2 text-neutral-400" />
+
+        <Link href="/menu" className="hover:text-black transition">
+          Menu
+        </Link>
+
+        <ChevronRight className="w-4 h-4 mx-2 text-neutral-400" />
+
+        <span className="font-medium text-neutral-900 line-clamp-1">{product.name}</span>
+      </div>
+
+      {/* Main Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+
+        {/* Image gallery */}
+        <div>
+          <Gallery image={product.images} />
         </div>
-      </Container>
-    </div>
+
+        {/* Product Info */}
+        <div className="flex items-start justify-start">
+          <Info product={product} />
+        </div>
+      </div>
+
+      {/* Suggested Products */}
+      <div className="mt-16">
+        <SuggestedList products={suggestedProduct} />
+      </div>
+    </Container>
   );
 };
 

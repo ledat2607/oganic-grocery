@@ -1,89 +1,150 @@
 "use client";
 
 import { Products } from "@/type-db";
-import { Card, CardDescription, CardTitle } from "./ui/card";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { Heart, HeartCrack, ShoppingCart } from "lucide-react";
+import { Heart, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import useCart from "@/hooks/use-cart";
 
 interface PopularcontentProps {
   data: Products;
 }
-    
+
 const Popularcontent = ({ data }: PopularcontentProps) => {
   const cart = useCart();
-    const [isLiked, setIsLiked] = useState(false);
-    const addToCart = (data: Products) => {
-      cart.addItem({ ...data, qty: 1 });
-    };
+  const [isLiked, setIsLiked] = useState(false);
+
+  const addToCart = (data: Products) => {
+    cart.addItem({ ...data, qty: 1 });
+  };
+
   return (
-    <Card className="w-full min-h-[340px] bg-white shadow-lg border-gradient flex flex-col items-center justify-center relative py-6 pt-24 mb-24 lg:pt-28">
-      <div className="absolute bg-green-500 -top-[4%] md:-top-[20%] overflow-hidden w-24 md:w-40 h-24 md:h-40 rounded-full flex items-center justify-center p-1 md:p-2">
-        <div className="w-full h-full rounded-full relative bg-white">
-          <Image
-            className="w-full h-full rounded-full p-1 relative object-contain bg-white"
-            fill
-            alt=""
-            src={data.images[0].url}
+    <div
+      className="
+        group
+        w-full 
+        bg-white 
+        rounded-2xl 
+        border 
+        shadow-sm 
+        hover:shadow-md 
+        transition 
+        overflow-hidden 
+        flex 
+        flex-col
+      "
+    >
+      {/* Product Image */}
+      <div className="relative w-full h-48 overflow-hidden">
+        <Image
+          src={data.images[0]?.url}
+          alt={data.name}
+          fill
+          className="
+            object-cover 
+            group-hover:scale-105 
+            transition 
+            duration-300
+          "
+        />
+
+        {/* Wishlist Button */}
+        <button
+          onClick={() => setIsLiked(!isLiked)}
+          className="
+            absolute 
+            top-3 
+            right-3 
+            bg-white 
+            rounded-full 
+            p-2 
+            shadow-sm 
+            hover:shadow-md 
+            transition
+          "
+        >
+          <Heart
+            className={`w-5 h-5 ${
+              isLiked ? "text-red-500 fill-red-500" : "text-neutral-600"
+            }`}
           />
+        </button>
+      </div>
+
+      {/* Content */}
+      <div className="p-4 flex flex-col flex-1">
+
+        {/* Name */}
+        <Link href={`/menu/${data.id}`}>
+          <h2
+            className="
+              text-lg 
+              font-semibold 
+              text-neutral-900 
+              mb-1 
+              line-clamp-1
+            "
+          >
+            {data.name}
+          </h2>
+        </Link>
+
+        {/* Tags */}
+        <div className="flex gap-2 flex-wrap mb-3">
+          <span className="px-2 py-1 text-xs rounded-full bg-emerald-100 text-emerald-700">
+            {data.cuisine}
+          </span>
+          <span className="px-2 py-1 text-xs rounded-full bg-rose-100 text-rose-700">
+            {data.category}
+          </span>
+          <span className="px-2 py-1 text-xs rounded-full bg-indigo-100 text-indigo-700">
+            {data.size}
+          </span>
+        </div>
+
+        {/* Description */}
+        <p className="text-sm text-neutral-500 line-clamp-2 mb-4">
+          {data.description}
+        </p>
+
+        {/* Price + Order */}
+        <div className="mt-auto flex items-center gap-3">
+          <div className="text-xl font-bold text-emerald-600">
+            ${data.discountPrice}
+          </div>
+
+          <Link className="w-full" href={`/menu/${data.id}`}>
+            <Button
+              className="
+                w-full 
+                bg-emerald-500 
+                hover:bg-emerald-600 
+                text-white 
+                rounded-xl 
+                font-semibold
+              "
+            >
+              Order
+            </Button>
+          </Link>
+
+          {/* Add to cart */}
+          <Button
+            onClick={() => addToCart(data)}
+            className="
+              p-2 
+              bg-neutral-200 
+              hover:bg-neutral-300 
+              rounded-xl
+            "
+          >
+            <ShoppingCart className="w-5 h-5 text-neutral-700" />
+          </Button>
         </div>
       </div>
-      <Link href={`/menu/${data.id}`} className="w-full px-2 mt-4 text-center">
-        <CardTitle className="text-neutral-700 truncate w-full">
-          {data.name}
-        </CardTitle>
-      </Link>
-      <div className="w-full grid grid-cols-3 gap-2 px-2 mt-4">
-        <p className="rounded-md text-center whitespace-nowrap text-white bg-emerald-500 px-2 py-[2px] text-sm font-bold">
-          {data.cuisine}
-        </p>
-        <p className="rounded-md text-center whitespace-nowrap text-white bg-rose-500 px-2 py-[2px] text-sm font-bold">
-          {data.category}
-        </p>
-        <p className="rounded-md text-center whitespace-nowrap text-white bg-rose-500 px-2 py-[2px] text-sm font-bold">
-          {data.size}
-        </p>
-      </div>
-      <CardDescription className="text-center px-2 py-2">
-        {data.description}
-      </CardDescription>
-      <div className="w-full flex items-center px-2 mt-4 gap-3">
-        <Button
-          className="rounded-full font-semibold text-lg text-muted-foreground"
-          variant={"outline"}
-        >
-          $ {data.discountPrice}
-        </Button>
-        <Link href={`/menu/${data.id}`} className="w-full">
-          <Button className="rounded-full font-semibold w-full text-lg text-white bg-green-400">
-            Order
-          </Button>
-        </Link>
-      </div>
-
-      {/*Card */}
-      <Button
-        onClick={() => addToCart(data)}
-        className="absolute top-7 right-0 rounded-tr-none rounded-tl-lg rounded-bl-lg rounded-br-none px-3"
-      >
-        <ShoppingCart className="w-4 h-4" />
-      </Button>
-
-      {/*Wishlist */}
-      <Button
-        variant={isLiked ? "default" : "outline"}
-        className="absolute top-7 left-0 rounded-tl-none rounded-tr-lg rounded-br-lg rounded-bl-none px-3"
-      >
-        {isLiked ? (
-          <Heart className="w-4 h-4" />
-        ) : (
-          <HeartCrack className="w-4 h-4" />
-        )}
-      </Button>
-    </Card>
+    </div>
   );
 };
 

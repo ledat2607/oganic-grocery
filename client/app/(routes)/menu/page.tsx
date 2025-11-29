@@ -43,11 +43,20 @@ const MenuPage = async ({ searchParams }: MenuPageProps) => {
       <Container className="px-4 md:px-12">
         <div className="grid grid-cols-2 md:grid-cols-12 py-12 gap-2">
           <div className="hidden md:block col-span-2">
-            <FilterContainer>
-              <CategoryFilter categories={categories} />
-              <SizeFilter sizes={sizes} />
-              <CuisinFilter cuisines={cuisines} />
-            </FilterContainer>
+            <aside className="hidden md:block w-64 shrink-0">
+              <FilterContainer className="bg-white dark:bg-neutral-900 rounded-2xl p-6 shadow-sm border space-y-4">
+                <div>
+                  <h3 className="text-xl font-semibold">Filters</h3>
+                  <p className="text-sm text-neutral-500">
+                    Tìm kiếm theo danh mục, kích thước và ẩm thực
+                  </p>
+                </div>
+
+                <CategoryFilter categories={categories} />
+                <SizeFilter sizes={sizes} />
+                <CuisinFilter cuisines={cuisines} />
+              </FilterContainer>
+            </aside>
           </div>
           <Box className="col-span-12 md:col-span-10 flex flex-col items-start justify-start">
             <PageContent product={products} />

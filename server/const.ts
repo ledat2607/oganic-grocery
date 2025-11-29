@@ -6,7 +6,7 @@ export const UserRoles = [
     id: "user_349JrMToGpcmioqPn5So14pbBVO", // Replace with the actual admin ID
   },
   {
-    role: "shipper",
+    role: "admin",
     id: "user_2lomsDMK4oxfZUkHjVPu7qWl2Fu", // Replace with the actual admin ID
   },
   {

@@ -28,54 +28,89 @@ const PageContent = ({ product }: PageContentProps) => {
       router.push(href);
     }
   };
+
   return (
     <>
-      <Box className="pt-4 pl-16 pb-12 flex flex-col">
-        <Box className="text-neutral-700 text-sm items-center">
-          <Link href={"/"} className="flex items-center gap-2">
-            <Home className="w-6 h-6 cursor-pointer" />
+      {/* Breadcrumb + Selected Filters */}
+      <Box className="pt-4 pb-10 flex flex-col gap-6">
+        {/* Breadcrumb */}
+        <Box className="text-sm flex items-center gap-2 text-neutral-600">
+          <Link
+            href="/"
+            className="flex items-center gap-2 hover:text-black transition"
+          >
+            <Home className="w-5 h-5" />
             Main page
           </Link>
-          <ChevronRight className="w-5 h-5 text-muted-foreground" />
-          <Link href={"/menu"} className="flex items-center gap-2">
+
+          <ChevronRight className="w-4 h-4 text-neutral-400" />
+
+          <Link href="/menu" className="hover:text-black transition">
             Menu
           </Link>
+
           {searchParams.get("category") && (
             <>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
-              <Link href={"/menu"} className="flex items-center gap-2">
+              <ChevronRight className="w-4 h-4 text-neutral-400" />
+              <span className="capitalize text-black font-medium">
                 {searchParams.get("category")}
-              </Link>
+              </span>
             </>
           )}
         </Box>
-        <Box className="mt-8 flex flex-col items-start">
-          {searchParams.get("category") && (
-            <h1>{searchParams.get("category")}</h1>
-          )}
-          <Box className="gap-3 my-4">
-            {currentParams &&
-              Object.entries(currentParams).map(([key, value]) => (
-                <div className="px-4 py-1 cursor-pointer hover:shadow-md rounded-lg bg-emerald-500/10 text-neutral-600 flex items-center gap-1">
-                  {value}
-                  <X
-                    onClick={() => handleClick(key)}
-                    className="w-4 h-4 cursor-pointer hover:text-red-500"
-                  />
-                </div>
-              ))}
-          </Box>
+
+        {/* Title */}
+        {searchParams.get("category") && (
+          <h1 className="text-3xl font-bold text-neutral-800 capitalize">
+            {searchParams.get("category")}
+          </h1>
+        )}
+
+        {/* Selected Filters */}
+        <Box className="flex flex-wrap gap-3">
+          {Object.entries(currentParams).map(([key, value]) => (
+            <div
+              key={key}
+              className="
+                px-4 py-1
+                rounded-full
+                bg-emerald-500/10
+                text-emerald-700
+                flex items-center gap-2
+                text-sm
+                cursor-pointer
+                border border-emerald-200
+                hover:bg-emerald-500/20
+                transition
+              "
+            >
+              {value}
+
+              <X
+                onClick={() => handleClick(key)}
+                className="w-4 h-4 hover:text-red-500 transition"
+              />
+            </div>
+          ))}
         </Box>
       </Box>
-      <div className="grid grid-cols-2 lg:grid-cols-4 w-full h-full gap-4 pl-16">
+
+      {/* Product Grid */}
+      <div
+        className="
+          grid 
+          grid-cols-2 
+          sm:grid-cols-3 
+          lg:grid-cols-4 
+          xl:grid-cols-5 
+          gap-6
+          mt-6
+        "
+      >
         {product.length > 0 ? (
-          <>
-            {product.map((item) => (
-              <Popularcontent data={item} />
-            ))}
-          </>
+          product.map((item) => <Popularcontent key={item.id} data={item} />)
         ) : (
-          <div className="flex items-center justify-center">
+          <div className="col-span-full flex items-center justify-center h-40 text-neutral-500">
             No products found
           </div>
         )}
