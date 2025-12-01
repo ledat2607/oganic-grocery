@@ -1,65 +1,65 @@
 'use client';
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Box from "@/components/box";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { Order } from "@/type-db";
 import Image from "next/image";
-import Modal from "./modal";
+import Modal from "./modal-order";
 
 interface OrderItemProps {
   order: Order;
 }
 
-const OrderItem = ({ order }: OrderItemProps) => {
+export default function OrderItem({ order }: OrderItemProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
 
   return (
     <Box>
-      <div className="w-full grid grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-6 px-4 py-2 items-center rounded-md border border-gray-100">
-        <div className="flex items-center gap-2">
-          {order.orderItems.map((item) => (
-            <div
-              key={item.id}
-              className="aspect-square w-16 min-w-16 h-16 min-h-16 rounded-md relative overflow-hidden bg-gray-100"
-            >
-              <Image
-                src={item.images[0].url}
-                alt=""
-                className="w-full h-full object-contain"
-                fill
-              />
-            </div>
-          ))}
+      {/* Card */}
+      <div className="bg-white rounded-2xl p-5 shadow-md hover:shadow-xl transition-transform transform hover:scale-105 flex flex-col">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-3">
+          <p className="font-semibold text-lg">Order #{order.id.slice(0, 6)}</p>
+          <span
+            className={`px-3 py-1 rounded-full text-sm ${
+              order.order_status.toLowerCase() === "processing"
+                ? "bg-yellow-500 text-white"
+                : "bg-green-500 text-white"
+            }`}
+          >
+            {order.order_status}
+          </span>
         </div>
-        <p className="text-lg font-semibold text-muted-foreground">
-          {order.orderItems.map((item) => item.name).join(",")}
+
+        {/* Thumbnail */}
+        {order.orderItems[0]?.images[0]?.url && (
+          <div className="w-full h-40 relative mb-3 rounded-lg overflow-hidden">
+            <Image
+              src={order.orderItems[0].images[0].url}
+              alt={order.orderItems[0].name}
+              fill
+              className="object-cover"
+            />
+          </div>
+        )}
+
+        {/* Info */}
+        <p className="text-gray-500 text-sm mb-1">
+          {order.orderItems.length} item(s)
         </p>
-        <p className={cn("text-base font-semibold")}>{order.order_status}</p>
-        <p
-          className={cn(
-            "text-base font-semibold",
-            order.isPaid ? "text-green-500" : "text-red-500"
-          )}
-        >
-          {order.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
+        <p className="text-gray-500 text-sm mb-3">
+          {/* Placed on {order?.createdAt?.toDate().toLocaleDateString()} */}
         </p>
-        <Button onClick={handleOpenModal}>Xem chi tiết</Button>
+
+        <Button onClick={() => setIsModalOpen(true)}>View Details</Button>
       </div>
 
-      {/* Modal component */}
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal} order={order} />
+      {/* Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        order={order}
+      />
     </Box>
   );
-};
-
-export default OrderItem;
+}
